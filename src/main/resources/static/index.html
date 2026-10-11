@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - RIT Final Year CSE</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-subtle: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Top Navbar */
+        header {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+
+        .logo-title h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .health-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.85rem;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--success);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        /* Hero Banner */
+        .hero {
+            max-width: 1280px;
+            margin: 2rem auto 1rem;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .hero-text h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-text h2 span {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 600px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(8px);
+            text-align: center;
+            min-width: 110px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1280px;
+            margin: 1.5rem auto 3rem;
+            padding: 0 2rem;
+            width: 100%;
+        }
+
+        /* Tabs & Controls */
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 0.3rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.55rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        /* Book Grid */
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .book-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4), 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        .book-card:hover::before {
+            opacity: 1;
+        }
+
+        .book-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .book-id-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        .book-author {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-isbn {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-family: monospace;
+            margin-bottom: 1.25rem;
+        }
+
+        .book-rating-box {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .stars {
+            color: var(--warning);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .rating-num {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Auth Panel */
+        .auth-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 15, 30, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            max-width: 450px;
+            width: 90%;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .alert-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .alert-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header>
+        <div class="navbar">
+            <div class="logo-group">
+                <div class="logo-icon">📚</div>
+                <div class="logo-title">
+                    <h1>Library Management System</h1>
+                    <p>RIT CSE Batch A4 • DevOps Project</p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="health-badge" id="healthBadge">
+                    <span class="pulse-dot"></span>
+                    <span id="healthText">API Checking...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h2>Modern <span>Catalog & Rating</span> Portal</h2>
+            <p>Welcome to the Library Management System. Browse catalog books, submit real-time ratings, and manage authentication powered by Spring Boot REST APIs.</p>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="bookCount">3</div>
+                <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="color: var(--success);" id="apiStatus">UP</div>
+                <div class="stat-label">Backend Status</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <div class="controls-bar">
+            <div class="tabs">
+                <button class="tab-btn active" id="tabBooks" onclick="switchView('books')">📖 Book Catalog</button>
+                <button class="tab-btn" id="tabAuth" onclick="switchView('auth')">🔐 User Auth Portal</button>
+            </div>
+            <div>
+                <button class="btn btn-secondary" style="width: auto;" onclick="loadBooks()">🔄 Refresh Catalog</button>
+            </div>
+        </div>
+
+        <!-- Books View -->
+        <div id="booksView">
+            <div class="book-grid" id="bookGrid">
+                <!-- Dynamically loaded books -->
+                <div style="text-align: center; grid-column: 1/-1; padding: 3rem; color: var(--text-secondary);">
+                    Loading library catalog...
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth View -->
+        <div id="authView" style="display: none;">
+            <div class="auth-container">
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" id="subTabLogin" onclick="toggleAuthForm('login')">Login</button>
+                    <button class="btn btn-secondary" id="subTabRegister" onclick="toggleAuthForm('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Username or Email</label>
+                        <input type="text" class="form-input" id="loginUsername" placeholder="e.g. admin@rit.ac.in" required value="admin@rit.ac.in">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Enter password" required value="admin123">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" style="display: none;" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" id="regName" placeholder="e.g. Diksha Dabhole" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" id="regEmail" placeholder="e.g. diksha@rit.ac.in" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="regPassword" placeholder="Create password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+
+                <div id="authResult" style="margin-top: 1rem; font-size: 0.85rem; text-align: center;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rating Modal -->
+    <div class="modal-overlay" id="rateModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalBookTitle">Rate Book</h3>
+                <button class="close-btn" onclick="closeRateModal()">&times;</button>
+            </div>
+            <form onsubmit="submitRating(event)">
+                <input type="hidden" id="modalBookId">
+                <div class="form-group">
+                    <label class="form-label">Rating Score (1 to 5 Stars)</label>
+                    <select class="form-input" id="modalScore" required>
+                        <option value="5">⭐⭐⭐⭐⭐ (5 - Outstanding)</option>
+                        <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                        <option value="3">⭐⭐⭐ (3 - Average)</option>
+                        <option value="2">⭐⭐ (2 - Below Average)</option>
+                        <option value="1">⭐ (1 - Poor)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Review Comment</label>
+                    <textarea class="form-input" id="modalComment" rows="3" placeholder="Share your thoughts on this book..." required></textarea>
+                </div>
+                <div class="card-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRateModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Rating</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="alert-toast" id="toast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMessage">Success</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Rajarambapu Institute of Technology (RIT) • Department of Computer Science & Engineering</p>
+        <p style="margin-top: 0.4rem; font-size: 0.75rem; color: #64748b;">Git & GitHub Engineer: Diksha Dhanaji Dabhole • Final Year CSE-A (Batch A4)</p>
+    </footer>
+
+    <script>
+        // Check Backend Health
+        async function checkHealth() {
+            try {
+                const res = await fetch('/health');
+                const data = await res.json();
+                if (data.status === 'UP') {
+                    document.getElementById('healthText').textContent = 'API Online (UP)';
+                    document.getElementById('apiStatus').textContent = 'UP';
+                }
+            } catch (err) {
+                document.getElementById('healthText').textContent = 'API Offline';
+                document.getElementById('healthText').style.color = '#ef4444';
+                document.getElementById('apiStatus').textContent = 'DOWN';
+            }
+        }
+
+        // Fetch & Render Books
+        async function loadBooks() {
+            try {
+                const res = await fetch('/api/books');
+                const books = await res.json();
+                const grid = document.getElementById('bookGrid');
+                document.getElementById('bookCount').textContent = books.length;
+
+                if (!books || books.length === 0) {
+                    grid.innerHTML = '<div style="text-align:center;grid-column:1/-1;padding:3rem;">No books found.</div>';
+                    return;
+                }
+
+                grid.innerHTML = books.map(book => {
+                    const avg = book.averageRating ? book.averageRating.toFixed(1) : '0.0';
+                    const stars = '⭐'.repeat(Math.round(book.averageRating || 0)) || '☆';
+                    return `
+                        <div class="book-card">
+                            <div>
+                                <div class="book-header">
+                                    <div class="book-title">${escapeHtml(book.title)}</div>
+                                    <div class="book-id-badge">ID #${book.id}</div>
+                                </div>
+                                <div class="book-author">by ${escapeHtml(book.author)}</div>
+                                <div class="book-isbn">ISBN: ${escapeHtml(book.isbn)}</div>
+                                
+                                <div class="book-rating-box">
+                                    <span class="stars">${stars}</span>
+                                    <span class="rating-num">${avg} / 5.0 (${book.ratings ? book.ratings.length : 0} reviews)</span>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="openRateModal(${book.id}, '${escapeHtml(book.title)}')">⭐ Rate Book</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                document.getElementById('bookGrid').innerHTML = '<div style="text-align:center;grid-column:1/-1;color:#ef4444;">Failed to load books from backend.</div>';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // Rate Modal
+        function openRateModal(bookId, bookTitle) {
+            document.getElementById('modalBookId').value = bookId;
+            document.getElementById('modalBookTitle').textContent = 'Rate: ' + bookTitle;
+            document.getElementById('modalComment').value = '';
+            document.getElementById('rateModal').classList.add('active');
+        }
+
+        function closeRateModal() {
+            document.getElementById('rateModal').classList.remove('active');
+        }
+
+        async function submitRating(event) {
+            event.preventDefault();
+            const bookId = document.getElementById('modalBookId').value;
+            const rating = parseInt(document.getElementById('modalScore').value);
+            const comment = document.getElementById('modalComment').value;
+
+            try {
+                const res = await fetch(`/api/books/${bookId}/rate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating, comment })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('⭐ Rating submitted successfully!');
+                    closeRateModal();
+                    loadBooks();
+                } else {
+                    showToast(data.message || 'Error submitting rating', '❌');
+                }
+            } catch (err) {
+                showToast('Failed to connect to backend', '❌');
+            }
+        }
+
+        // View Switcher
+        function switchView(view) {
+            document.getElementById('booksView').style.display = view === 'books' ? 'block' : 'none';
+            document.getElementById('authView').style.display = view === 'auth' ? 'block' : 'none';
+            document.getElementById('tabBooks').classList.toggle('active', view === 'books');
+            document.getElementById('tabAuth').classList.toggle('active', view === 'auth');
+        }
+
+        function toggleAuthForm(type) {
+            document.getElementById('loginForm').style.display = type === 'login' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = type === 'register' ? 'block' : 'none';
+            document.getElementById('subTabLogin').className = type === 'login' ? 'btn btn-primary' : 'btn btn-secondary';
+            document.getElementById('subTabRegister').className = type === 'register' ? 'btn btn-primary' : 'btn btn-secondary';
+            document.getElementById('authResult').innerHTML = '';
+        }
+
+        // Auth Operations
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const resultBox = document.getElementById('authResult');
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    resultBox.innerHTML = `<span style="color:var(--success);">✅ ${data.message} (Token: ${data.token.substring(0, 15)}...)</span>`;
+                    showToast('Logged in successfully!');
+                } else {
+                    resultBox.innerHTML = `<span style="color:var(--danger);">❌ ${data.message || 'Login failed'}</span>`;
+                }
+            } catch (err) {
+                resultBox.innerHTML = `<span style="color:var(--danger);">❌ Server error connecting to /api/auth/login</span>`;
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const resultBox = document.getElementById('authResult');
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    resultBox.innerHTML = `<span style="color:var(--success);">✅ ${data.message}</span>`;
+                    showToast('Registration successful! You can now log in.');
+                    setTimeout(() => toggleAuthForm('login'), 1500);
+                } else {
+                    resultBox.innerHTML = `<span style="color:var(--danger);">❌ ${data.message || 'Registration failed'}</span>`;
+                }
+            } catch (err) {
+                resultBox.innerHTML = `<span style="color:var(--danger);">❌ Server error connecting to /api/auth/register</span>`;
+            }
+        }
+
+        // Toast
+        function showToast(msg, icon = '✅') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastIcon').textContent = icon;
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Initial Load
+        checkHealth();
+        loadBooks();
+    </script>
+</body>
+</html>
