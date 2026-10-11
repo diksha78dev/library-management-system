@@ -69,8 +69,13 @@ library-management-system/
 │   ├── main/resources/               application.properties
 │   └── test/java/com/rit/library/    Unit tests
 ├── CONTRIBUTING.md                 Branch and pull request rules
+├── TEAM_TASKS.md                   Member task allocation, steps & prompts
 └── .github/pull_request_template.md
 ```
+
+## Team Tasks & Workflow
+
+Every team member must read [TEAM_TASKS.md](TEAM_TASKS.md) for their exact allocated role, branch name, Antigravity IDE prompts, and deliverables before starting work.
 
 ## Contributing
 
