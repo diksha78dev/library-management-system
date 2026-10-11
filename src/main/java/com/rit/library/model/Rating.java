@@ -1,6 +1,7 @@
 package com.rit.library.model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Domain model representing a book rating and review comment.
@@ -9,20 +10,20 @@ public class Rating {
 
     private Long id;
     private Long bookId;
-    private int rating;
+    private int score;
     private String comment;
     private LocalDateTime createdAt;
 
     public Rating() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(ZoneId.systemDefault());
     }
 
-    public Rating(Long id, Long bookId, int rating, String comment) {
+    public Rating(Long id, Long bookId, int score, String comment) {
         this.id = id;
         this.bookId = bookId;
-        this.rating = rating;
+        this.score = score;
         this.comment = comment;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(ZoneId.systemDefault());
     }
 
     public Long getId() {
@@ -41,12 +42,20 @@ public class Rating {
         this.bookId = bookId;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public int getRating() {
-        return rating;
+        return score;
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        this.score = rating;
     }
 
     public String getComment() {
