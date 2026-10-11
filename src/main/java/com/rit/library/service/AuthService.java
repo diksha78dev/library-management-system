@@ -26,6 +26,10 @@ import com.rit.library.model.User;
 @Service
 public class AuthService {
 
+    private static final String ADMIN_EMAIL = "admin@rit.ac.in";
+    private static final String STUDENT_EMAIL = "student@rit.ac.in";
+    private static final String GIRIJA_EMAIL = "girija@rit.ac.in";
+
     // In-memory store for registered credentials: username/email -> password
     private final Map<String, String> userCredentials = new ConcurrentHashMap<>();
 
@@ -34,13 +38,13 @@ public class AuthService {
 
     public AuthService() {
         // Pre-configure demo credentials for local development, testing, and evaluation
-        registerUser("admin", "admin@rit.ac.in", "admin123");
-        registerUser("student", "student@rit.ac.in", "student123");
-        registerUser("girija", "girija@rit.ac.in", "girija123");
+        registerUser("admin", ADMIN_EMAIL, "admin123");
+        registerUser("student", STUDENT_EMAIL, "student123");
+        registerUser("girija", GIRIJA_EMAIL, "girija123");
 
-        registeredUsers.put("admin@rit.ac.in", new User("Admin", "admin@rit.ac.in", "admin123"));
-        registeredUsers.put("student@rit.ac.in", new User("Student", "student@rit.ac.in", "student123"));
-        registeredUsers.put("girija@rit.ac.in", new User("Girija Ashok Kadam", "girija@rit.ac.in", "girija123"));
+        registeredUsers.put(ADMIN_EMAIL, new User("Admin", ADMIN_EMAIL, "admin123"));
+        registeredUsers.put(STUDENT_EMAIL, new User("Student", STUDENT_EMAIL, "student123"));
+        registeredUsers.put(GIRIJA_EMAIL, new User("Girija Ashok Kadam", GIRIJA_EMAIL, "girija123"));
     }
 
     /**

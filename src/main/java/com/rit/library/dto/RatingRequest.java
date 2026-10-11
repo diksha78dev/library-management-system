@@ -31,27 +31,11 @@ public class RatingRequest {
         this.rating = rating;
     }
 
-    public Integer getScore() {
-        return rating;
-    }
-
-    public void setScore(Integer score) {
-        this.rating = score;
-    }
-
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public String getReviewComment() {
-        return comment;
-    }
-
-    public void setReviewComment(String reviewComment) {
-        this.comment = reviewComment;
     }
 }

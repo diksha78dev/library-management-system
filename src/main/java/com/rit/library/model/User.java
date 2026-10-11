@@ -1,6 +1,7 @@
 package com.rit.library.model;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * User domain model representing registered library users.
@@ -14,14 +15,14 @@ public class User {
     private LocalDateTime registeredAt;
 
     public User() {
-        this.registeredAt = LocalDateTime.now();
+        this.registeredAt = LocalDateTime.now(ZoneId.systemDefault());
     }
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.registeredAt = LocalDateTime.now();
+        this.registeredAt = LocalDateTime.now(ZoneId.systemDefault());
     }
 
     public String getName() {

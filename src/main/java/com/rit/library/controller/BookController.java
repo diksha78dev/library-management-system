@@ -46,9 +46,9 @@ public class BookController {
      * Retrieves a single book by ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBookById(@PathVariable Long id) {
+    public ResponseEntity<Object> getBookById(@PathVariable Long id) {
         return bookService.findBookById(id)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .<ResponseEntity<Object>>map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("success", false, "message", "Book not found with id: " + id)));
     }
