@@ -1,0 +1,314 @@
+{
+  "info": {
+    "_postman_id": "a3b1f5d2-8924-4f9e-a892-9c943cb9a1a2",
+    "name": "Library Management System API Tests",
+    "description": "Postman API test suite for Library Management System verifying health check, user authentication, registration, and book ratings.\nAuthored by Awantika Sharadkumar Patil (PRN: 2303065) - QA Engineer.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is under 1000ms\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test(\"Verify health status is UP\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"object\");",
+              "    pm.expect(jsonData.status).to.eql(\"UP\");",
+              "    pm.expect(jsonData.app).to.eql(\"library-management-system\");",
+              "});",
+              "",
+              "pm.test(\"Verify health response schema\", function () {",
+              "    const schema = {",
+              "        \"type\": \"object\",",
+              "        \"properties\": {",
+              "            \"status\": { \"type\": \"string\" },",
+              "            \"app\": { \"type\": \"string\" }",
+              "        },",
+              "        \"required\": [\"status\", \"app\"]",
+              "    };",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "health"
+          ]
+        },
+        "description": "Verifies that the application is running and healthy."
+      },
+      "response": []
+    },
+    {
+      "name": "2. User Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify 200 OK and token returned\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.message).to.eql(\"Login successful\");",
+              "    pm.expect(jsonData.token).to.be.a(\"string\").and.not.empty;",
+              "",
+              "    // Store auth token in environment for subsequent requests",
+              "    pm.environment.set(\"authToken\", jsonData.token);",
+              "});",
+              "",
+              "pm.test(\"Verify login response schema\", function () {",
+              "    const schema = {",
+              "        \"type\": \"object\",",
+              "        \"properties\": {",
+              "            \"success\": { \"type\": \"boolean\" },",
+              "            \"message\": { \"type\": \"string\" },",
+              "            \"token\": { \"type\": \"string\" }",
+              "        },",
+              "        \"required\": [\"success\", \"message\", \"token\"]",
+              "    };",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"{{demoUsername}}\",\n    \"password\": \"{{demoPassword}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        },
+        "description": "Authenticates a user with username/email and password, returning an auth token."
+      },
+      "response": []
+    },
+    {
+      "name": "3. User Registration",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const timestamp = Date.now();",
+              "pm.variables.set(\"uniqueEmail\", \"qa.tester.\" + timestamp + \"@rit.ac.in\");",
+              "pm.variables.set(\"uniqueName\", \"QA Tester \" + timestamp);"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created or 200 OK\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([201, 200]);",
+              "});",
+              "",
+              "pm.test(\"Verify user registered successfully\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.message).to.eql(\"User registered successfully\");",
+              "});",
+              "",
+              "pm.test(\"Verify registration response schema\", function () {",
+              "    const schema = {",
+              "        \"type\": \"object\",",
+              "        \"properties\": {",
+              "            \"success\": { \"type\": \"boolean\" },",
+              "            \"message\": { \"type\": \"string\" },",
+              "            \"token\": { \"type\": [\"string\", \"null\"] }",
+              "        },",
+              "        \"required\": [\"success\", \"message\"]",
+              "    };",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"{{uniqueName}}\",\n    \"email\": \"{{uniqueEmail}}\",\n    \"password\": \"SecurePass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "register"
+          ]
+        },
+        "description": "Registers a new user account with unique name, email, and password."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Rate Book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify rating submitted successfully\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.message).to.eql(\"Rating submitted successfully\");",
+              "    pm.expect(jsonData.rating).to.be.an(\"object\");",
+              "    pm.expect(jsonData.rating.bookId).to.eql(1);",
+              "    pm.expect(jsonData.rating.rating).to.eql(5);",
+              "    pm.expect(jsonData.rating.comment).to.eql(\"Outstanding book on software craftsmanship and clean code practices!\");",
+              "});",
+              "",
+              "pm.test(\"Verify rating response schema\", function () {",
+              "    const schema = {",
+              "        \"type\": \"object\",",
+              "        \"properties\": {",
+              "            \"success\": { \"type\": \"boolean\" },",
+              "            \"message\": { \"type\": \"string\" },",
+              "            \"rating\": {",
+              "                \"type\": \"object\",",
+              "                \"properties\": {",
+              "                    \"id\": { \"type\": \"number\" },",
+              "                    \"bookId\": { \"type\": \"number\" },",
+              "                    \"rating\": { \"type\": \"number\" },",
+              "                    \"score\": { \"type\": \"number\" },",
+              "                    \"comment\": { \"type\": \"string\" },",
+              "                    \"createdAt\": { \"type\": \"string\" }",
+              "                },",
+              "                \"required\": [\"id\", \"bookId\", \"rating\", \"comment\"]",
+              "            }",
+              "        },",
+              "        \"required\": [\"success\", \"message\", \"rating\"]",
+              "    };",
+              "    pm.response.to.have.jsonSchema(schema);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"rating\": 5,\n    \"comment\": \"Outstanding book on software craftsmanship and clean code practices!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/books/1/rate",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "books",
+            "1",
+            "rate"
+          ]
+        },
+        "description": "Submits a rating score and review comment for book with ID 1."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}
