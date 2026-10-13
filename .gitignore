@@ -16,5 +16,6 @@ Thumbs.db
 
 # Logs and local config
 *.log
+logs/
 .env
 application-local.properties
